@@ -4,8 +4,15 @@ const CACHE_DURATION = 10800000; // 3 hr
 
 export default async function handler(req, res) {
   try {
+     const now = Date.now();
+
+    if (cachedData && (now - lastFetched < CACHE_DURATION)) {
+      return res.status(200).json(cachedData);
+    }
+    
     const response = await fetch('https://api.rolimons.com/items/v2/itemdetails');
     if (!response.ok) throw new Error("Failed to fetch Rolimon API");
+    const minValue = parseInt(req.query.minValue) || 0;
 
     const data = await response.json();
 
