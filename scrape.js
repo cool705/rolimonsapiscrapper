@@ -1,5 +1,12 @@
-export default async function handler(req, res) {
-  // Example: return some fake data
-  const data = { item: "Rolimon's example item", value: 12345 };
+export default function handler(req, res) {
+  const data = {
+    status: "ok",
+    source: "rolimons",
+    items: [
+      { name: "Cool Hat", value: 5000 },
+      { name: "Epic Sword", value: 12000 }
+    ]
+  };
+
   res.status(200).json(data);
 }
