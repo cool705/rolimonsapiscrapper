@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       .filter(item => item.v !== -1 && item.v >= minValue);
 
     res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
-    res.status(200).json({ success: true, count: items.length, items });
+    res.status(200).json({items});
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data' });
   }
