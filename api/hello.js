@@ -5,12 +5,16 @@ export default async function handler(req, res) {
 
     const minValue = parseInt(req.query.minValue) || 0;
 
-    const items = Object.entries(data.items)
-      .map(([id, values]) => ({ i: id, v: values[3] }))
-      .filter(item => item.v !== -1 && item.v >= minValue);
+    const items = {};
+    for (const [id, values] of Object.entries(data.items)) {
+      const v = values[3];
+      if (v !== -1 && v >= minValue) {
+        items[id] = v;
+      }
+    }
 
     res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
-    res.status(200).json({items});
+    res.status(200).json({ items });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data' });
   }
