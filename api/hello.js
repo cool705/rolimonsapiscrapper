@@ -19,9 +19,11 @@ export default async function handler(req, res) {
     const minValue = parseInt(req.query.minValue) || 0;
 
     const items = {};
-    for (const [id, values] of Object.entries(data.items)) {
-      const v = values[3];
-      if (v !== -1 && v >= minValue) {
+    const ItemsDataTable = data.items;
+
+     for (const id in ItemsDataTable) {
+        const v = itemsObj[id][3];
+      if (v >= minValue && v !== -1) {
         items[id] = v;
       }
     }
