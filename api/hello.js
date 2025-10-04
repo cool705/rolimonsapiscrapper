@@ -4,25 +4,23 @@ const CACHE_DURATION = 10800000; // 3 hr
 
 export default async function handler(req, res) {
   try {
-     const now = Date.now();
+    const now = Date.now();
 
     if (cachedData && (now - lastFetched < CACHE_DURATION)) {
       return res.status(200).json(cachedData);
     }
-    
+
     const response = await fetch('https://api.rolimons.com/items/v2/itemdetails');
     if (!response.ok) throw new Error("Failed to fetch Rolimon API");
-    const minValue = parseInt(req.query.minValue) || 0;
 
     const data = await response.json();
-
     const minValue = parseInt(req.query.minValue) || 0;
 
     const items = {};
     const ItemsDataTable = data.items;
 
-     for (const id in ItemsDataTable) {
-        const v = itemsObj[id][3];
+    for (const id in ItemsDataTable) {
+      const v = ItemsDataTable[id][3]; 
       if (v >= minValue && v !== -1) {
         items[id] = v;
       }
@@ -34,10 +32,10 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate');
     res.status(200).json({ items });
   } catch (error) {
-      if (cachedData) {
-        return res.status(200).json(cachedData);
-      }
+    if (cachedData) {
+      return res.status(200).json(cachedData);
+    }
 
-   res.status(500).json({ success: false, error: 'Failed to fetch data' });
+    res.status(500).json({ success: false, error: 'Failed to fetch data' });
   }
 }
